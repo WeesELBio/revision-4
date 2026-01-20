@@ -10,7 +10,7 @@
   <div class="container">
     <h1>Revision App</h1>
 
-    <div id="selection">
+    <div class="controls">
       <label for="subject">Subject:</label>
       <select id="subject"></select>
 
@@ -20,14 +20,21 @@
       <label for="subtopic">Subtopic:</label>
       <select id="subtopic"></select>
 
-      <button id="start-btn">Start Revision</button>
+      <label for="difficulty">Difficulty:</label>
+      <select id="difficulty">
+        <option value="normal">Normal (Multiple Choice)</option>
+        <option value="hard">Hard (Type Answer)</option>
+      </select>
     </div>
 
-    <div id="quiz" class="hidden">
+    <div class="question-container">
       <p id="question-text"></p>
       <div id="options"></div>
-      <button id="next-btn" disabled>Next</button>
     </div>
+
+    <div id="feedback"></div>
+
+    <button id="next-button">Next Question</button>
   </div>
 
   <script src="script.js"></script>
