@@ -1,87 +1,117 @@
-let questionsData;
+let questions = {};
 let currentQuestions = [];
 let currentIndex = 0;
 
 const subjectSelect = document.getElementById('subject');
 const topicSelect = document.getElementById('topic');
 const subtopicSelect = document.getElementById('subtopic');
-const startBtn = document.getElementById('start-btn');
-
-const quizDiv = document.getElementById('quiz');
+const difficultySelect = document.getElementById('difficulty');
 const questionText = document.getElementById('question-text');
 const optionsDiv = document.getElementById('options');
-const nextBtn = document.getElementById('next-btn');
+const feedbackDiv = document.getElementById('feedback');
+const nextButton = document.getElementById('next-button');
 
+// Load questions from JSON
 fetch('questions.json')
   .then(res => res.json())
   .then(data => {
-    questionsData = data;
-    populateSelect(subjectSelect, Object.keys(data));
+    questions = data;
+    populateSubjects();
   });
 
-function populateSelect(select, options) {
-  select.innerHTML = '';
-  options.forEach(opt => {
-    const option = document.createElement('option');
-    option.value = opt;
-    option.textContent = opt;
-    select.appendChild(option);
+function populateSubjects() {
+  subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+  Object.keys(questions).forEach(sub => {
+    let opt = document.createElement('option');
+    opt.value = sub;
+    opt.innerText = sub;
+    subjectSelect.appendChild(opt);
   });
 }
 
-subjectSelect.addEventListener('change', () => {
-  const topics = Object.keys(questionsData[subjectSelect.value]);
-  populateSelect(topicSelect, topics);
-  topicSelect.dispatchEvent(new Event('change'));
-});
+function populateTopics() {
+  topicSelect.innerHTML = '<option value="">Select Topic</option>';
+  subtopicSelect.innerHTML = '<option value="">Select Subtopic</option>';
+  feedbackDiv.innerText = '';
+  if(!subjectSelect.value) return;
+  Object.keys(questions[subjectSelect.value]).forEach(topic => {
+    let opt = document.createElement('option');
+    opt.value = topic;
+    opt.innerText = topic;
+    topicSelect.appendChild(opt);
+  });
+}
 
-topicSelect.addEventListener('change', () => {
-  const subtopics = Object.keys(questionsData[subjectSelect.value][topicSelect.value]);
-  populateSelect(subtopicSelect, subtopics);
-});
+function populateSubtopics() {
+  subtopicSelect.innerHTML = '<option value="">Select Subtopic</option>';
+  feedbackDiv.innerText = '';
+  if(!topicSelect.value) return;
+  Object.keys(questions[subjectSelect.value][topicSelect.value]).forEach(sub => {
+    let opt = document.createElement('option');
+    opt.value = sub;
+    opt.innerText = sub;
+    subtopicSelect.appendChild(opt);
+  });
+}
 
-startBtn.addEventListener('click', () => {
-  const subtopicQuestions = questionsData[subjectSelect.value][topicSelect.value][subtopicSelect.value];
-  currentQuestions = shuffle(subtopicQuestions);
+function loadQuestions() {
+  if(!subtopicSelect.value) return;
+  currentQuestions = questions[subjectSelect.value][topicSelect.value][subtopicSelect.value];
   currentIndex = 0;
-  document.getElementById('selection').classList.add('hidden');
-  quizDiv.classList.remove('hidden');
   showQuestion();
-});
+}
 
 function showQuestion() {
+  if(currentIndex >= currentQuestions.length){
+    questionText.innerText = "No more questions!";
+    optionsDiv.innerHTML = '';
+    feedbackDiv.innerText = '';
+    return;
+  }
+
   const q = currentQuestions[currentIndex];
-  questionText.textContent = q.question;
+  questionText.innerText = q.question;
   optionsDiv.innerHTML = '';
-  q.options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.textContent = opt;
-    btn.addEventListener('click', () => checkAnswer(opt));
-    optionsDiv.appendChild(btn);
-  });
-  nextBtn.disabled = true;
+
+  if(difficultySelect.value === 'normal') {
+    q.options.forEach(opt => {
+      let btn = document.createElement('button');
+      btn.innerText = opt;
+      btn.onclick = () => checkAnswer(opt);
+      optionsDiv.appendChild(btn);
+    });
+  } else { // hard
+    let input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Type your answer';
+    optionsDiv.appendChild(input);
+    let submit = document.createElement('button');
+    submit.innerText = 'Submit';
+    submit.onclick = () => checkAnswer(input.value);
+    optionsDiv.appendChild(submit);
+  }
+
+  feedbackDiv.innerText = '';
 }
 
-function checkAnswer(selected) {
+function checkAnswer(ans) {
   const correct = currentQuestions[currentIndex].answer;
-  if (selected === correct) {
-    alert('Correct!');
+  if(ans.trim().toLowerCase() === correct.trim().toLowerCase()) {
+    feedbackDiv.innerText = 'Correct!';
+    feedbackDiv.style.color = 'green';
   } else {
-    alert(`Wrong! Correct answer: ${correct}`);
+    feedbackDiv.innerText = `Wrong! Correct answer: ${correct}`;
+    feedbackDiv.style.color = 'red';
   }
-  nextBtn.disabled = false;
 }
 
-nextBtn.addEventListener('click', () => {
+nextButton.onclick = () => {
   currentIndex++;
-  if (currentIndex < currentQuestions.length) {
-    showQuestion();
-  } else {
-    alert('Quiz finished!');
-    location.reload();
-  }
-});
-
-function shuffle(array) {
-  return array.sort(() => Math.random() - 0.5);
+  showQuestion();
 }
+
+// Event listeners
+subjectSelect.onchange = populateTopics;
+topicSelect.onchange = populateSubtopics;
+subtopicSelect.onchange = loadQuestions;
+difficultySelect.onchange = showQuestion;
