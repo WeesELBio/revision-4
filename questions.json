@@ -1,0 +1,38 @@
+{
+  "Biology": {
+    "Cells": {
+      "Cell Structure": [
+        {
+          "question": "What is the powerhouse of the cell?",
+          "options": ["Nucleus", "Mitochondria", "Ribosome", "Golgi apparatus"],
+          "answer": "Mitochondria"
+        },
+        {
+          "question": "Which organelle is responsible for protein synthesis?",
+          "options": ["Ribosome", "Lysosome", "Mitochondria", "Nucleus"],
+          "answer": "Ribosome"
+        }
+      ]
+    },
+    "Genetics": {
+      "DNA": [
+        {
+          "question": "DNA is made up of repeating units called?",
+          "options": ["Amino acids", "Nucleotides", "Monosaccharides", "Fatty acids"],
+          "answer": "Nucleotides"
+        }
+      ]
+    }
+  },
+  "Chemistry": {
+    "Periodic Table": {
+      "Groups": [
+        {
+          "question": "Which element is in group 1?",
+          "options": ["Oxygen", "Sodium", "Chlorine", "Helium"],
+          "answer": "Sodium"
+        }
+      ]
+    }
+  }
+}
