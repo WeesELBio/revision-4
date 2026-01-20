@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revision App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Revision App</h1>
+
+    <div id="selection">
+      <label for="subject">Subject:</label>
+      <select id="subject"></select>
+
+      <label for="topic">Topic:</label>
+      <select id="topic"></select>
+
+      <label for="subtopic">Subtopic:</label>
+      <select id="subtopic"></select>
+
+      <button id="start-btn">Start Revision</button>
+    </div>
+
+    <div id="quiz" class="hidden">
+      <p id="question-text"></p>
+      <div id="options"></div>
+      <button id="next-btn" disabled>Next</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
